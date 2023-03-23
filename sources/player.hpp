@@ -8,8 +8,6 @@ private:
 public:
     player(string name){
         this->name = name;
-        this->sunOfCards = 0;
-        this->sunOfVinCards = 0;
     }
     int stackSize();
     int cardesTaken();
