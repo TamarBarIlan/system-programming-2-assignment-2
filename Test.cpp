@@ -13,7 +13,6 @@ TEST_CASE("Checking whether at the beginning of the game each player has 26 card
     Player p1("Alice");
     Player p2("Bob");
     Game game(p1, p2);
-    bool res;
     CHECK(p1.stacksize() == 26);
     CHECK(p2.stacksize() == 26);
     CHECK(p1.cardesTaken() == 0);
@@ -68,6 +67,7 @@ TEST_CASE("Checking if after turn 1 there are less than 26 cards in the pack")
     game.playTurn();
     CHECK(p1.stacksize() < 26);
     CHECK(p2.stacksize() < 26);
+    CHECK((p1.cardesTaken() > 0 || p2.cardesTaken() > 0));
 }
 
 TEST_CASE("Checking if after ten turns there are less than 17 cards in the pack")
@@ -75,6 +75,7 @@ TEST_CASE("Checking if after ten turns there are less than 17 cards in the pack"
     Player p1("Alice");
     Player p2("Bob");
     Game game(p1, p2);
+    bool flag = false;
     for (int i = 0; i < 10; i++)
     {
         game.playTurn();
@@ -85,6 +86,7 @@ TEST_CASE("Checking if after ten turns there are less than 17 cards in the pack"
     }
     CHECK(p1.stacksize() < 17);
     CHECK(p2.stacksize() < 17);
+    CHECK((p1.cardesTaken() > 0 || p2.cardesTaken() > 0));
 }
 
 TEST_CASE("Checking if after at most 26 turns the game is over")
@@ -118,10 +120,56 @@ TEST_CASE("Checking if an error is thrown after at most 27 turns")
             game.playTurn();
         }
     }
-    catch(exception& e){
+    catch (exception &e)
+    {
         flag = true;
-        CHECK(flag);
     }
+    CHECK(flag);
 }
 
+TEST_CASE("Checking if an error is thrown if creating a game with player 1")
+{
+    Player p1("Alice");
+    bool flag = false;
+    try
+    {
+        Game game(p1, p1);
+    }
+    catch (exception &e)
+    {
+        flag = true;
+    }
+    CHECK(flag);
+}
 
+TEST_CASE("Checking if an error is thrown if another turn is activated after the game is over")
+{
+    Player p1("Alice");
+    Player p2("Bob");
+    Game game(p1, p2);
+    bool flag = false;
+    game.playAll();
+    try{
+        game.playTurn();
+    }
+    catch(exception &e){
+        flag = true;
+    }
+    CHECK(flag);
+}
+
+TEST_CASE("Checking if an error is thrown if playAll is activated on the same game twice")
+{
+    Player p1("Alice");
+    Player p2("Bob");
+    Game game(p1, p2);
+    bool flag = false;
+    game.playAll();
+    try{
+        game.playAll();
+    }
+    catch(exception &e){
+        flag = true;
+    }
+    CHECK(flag);
+}
