@@ -1,13 +1,16 @@
+#pragma once
 #include <iostream>
 using namespace std;
 
-class card {
+class Card
+{
 private:
     int number;
     string color;
 
 public:
-    card(int number, string color){
+    Card(int number, string color)
+    {
         this->number = number;
         this->color = color;
     }

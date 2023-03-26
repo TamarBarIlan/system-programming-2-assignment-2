@@ -1,8 +1,10 @@
 #include "player.hpp"
 
-int player :: stackSize(){
+int Player ::stacksize()
+{
     return 1;
 }
-int player :: cardesTaken(){
+int Player ::cardesTaken()
+{
     return 1;
 }

@@ -1,20 +1,29 @@
 #include "game.hpp"
+#include "player.hpp"
+#include "iostream"
+#include "stdio.h"
 
-void Game :: playTurn(){
-
+Game ::Game(Player p1, Player p2)
+{
+    this->p1 = p1;
+    this->p2 = p2;
 }
-void Game :: printLastTurn(){
 
+void Game ::playTurn()
+{
 }
-void Game :: playAll(){
-
+void Game ::printLastTurn()
+{
 }
-void Game :: printWiner(){
-
+void Game ::playAll()
+{
 }
-void Game :: printLog(){
-
+void Game ::printWiner()
+{
 }
-void Game :: printStats(){
-
+void Game ::printLog()
+{
+}
+void Game ::printStats()
+{
 }

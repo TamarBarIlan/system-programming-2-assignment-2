@@ -1,14 +1,22 @@
+#pragma once
+namespace ariel
+{
+}
+using namespace ariel;
 #include <iostream>
 using namespace std;
 
-class player {
+class Player
+{
 private:
     string name;
 
 public:
-    player(string name){
+    Player() {}
+    Player(std ::string name)
+    {
         this->name = name;
     }
-    int stackSize();
+    int stacksize();
     int cardesTaken();
 };

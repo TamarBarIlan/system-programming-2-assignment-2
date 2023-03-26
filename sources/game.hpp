@@ -1,16 +1,23 @@
-#include <iostream>
+
+#pragma once
+namespace ariel
+{
+}
+using namespace ariel;
+#include "player.hpp"
+#include "iostream"
+#include "stdio.h"
 using namespace std;
 
-class game {
-private:   
-    player p1;
-    player p2;
+class Game
+{
+private:
+    Player p1;
+    Player p2;
 
 public:
-    game(player p1, player p2){
-        this->p1 = p1;
-        this->p2 = p2;
-    }
+    Game() {}
+    Game(Player p1, Player p2);
     void playTurn();
     void printLastTurn();
     void playAll();
