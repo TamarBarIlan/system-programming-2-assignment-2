@@ -38,14 +38,6 @@ TEST_CASE("Checking if at the end of the game the sum of the cards is 52")
     Game game(p1, p2);
     bool res;
     game.playAll();
-    if (p1.stacksize() + p1.cardesTaken() + p2.stacksize() + p2.cardesTaken() == 52)
-    {
-        res = true;
-    }
-    else
-    {
-        res = false;
-    }
     CHECK(p1.cardesTaken() + p2.cardesTaken() == 52);
     CHECK(p1.stacksize() + p2.stacksize() == 0);
 }
@@ -113,6 +105,23 @@ TEST_CASE("Checking if after at most 26 turns the game is over")
     CHECK(p1.cardesTaken() + p2.cardesTaken() == 52);
 }
 
-
+TEST_CASE("Checking if an error is thrown after at most 27 turns")
+{
+    Player p1("Alice");
+    Player p2("Bob");
+    Game game(p1, p2);
+    bool flag = false;
+    try
+    {
+        for (int i = 0; i <= 26; i++)
+        {
+            game.playTurn();
+        }
+    }
+    catch(exception& e){
+        flag = true;
+        CHECK(flag);
+    }
+}
 
 
