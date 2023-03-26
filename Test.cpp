@@ -1,10 +1,11 @@
+
 #include "doctest.h"
 #include <stdexcept>
 #include "iostream"
 #include <stdio.h>
-#include "player.hpp"
-#include "game.hpp"
-#include "card.hpp"
+#include "sources/player.hpp"
+#include "sources/game.hpp"
+#include "sources/card.hpp"
 using namespace std;
 
 TEST_CASE("Checking whether at the beginning of the game each player has 26 cards")
@@ -111,5 +112,7 @@ TEST_CASE("Checking if after at most 26 turns the game is over")
     CHECK(p2.stacksize() == 0);
     CHECK(p1.cardesTaken() + p2.cardesTaken() == 52);
 }
+
+
 
 
