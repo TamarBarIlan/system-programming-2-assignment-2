@@ -2,16 +2,41 @@
 #include <iostream>
 using namespace std;
 
-class Card
+enum Rank
 {
-private:
-    int number;
-    string color;
+    ACE = 1,
+    TWO,
+    TREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE,
+    TEN,
+    JACK,
+    QUEEN,
+    KING
+};
+enum Suit
+{
+    SPADES,
+    HEARTS,
+    DIAMONDS,
+    CLUBS
+};
 
-public:
-    Card(int number, string color)
-    {
-        this->number = number;
-        this->color = color;
-    }
+struct Card
+{
+    Rank rank;
+    Suit suit;
+    int num_suits = 4;
+    int num_ranks = 13;
+};
+
+struct Deck
+{
+    vector<Card> cards;
+    string card_back;
+    int max_deck_size = 52;
 };
