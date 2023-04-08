@@ -35,11 +35,12 @@ int Player ::getIndex()
     return this->index;
 }
 
-int Player ::getNumInIndex(int index)
+int Player::getNumInIndex(int index)
 {
-    if (isIndexValid(index))
+    if (isIndexValid(index) && !cards.empty())
     {
-        this->cards[index];
+
+        return static_cast<int>(this->cards[static_cast<std::vector<Card>::size_type>(index)].rank);
     }
     return -1;
 }
@@ -54,7 +55,7 @@ void Player ::addCardesTaken(int num)
     this->countCardsTaken += num;
 }
 
-vector<Card> &Player ::getCards()
+vector<Card>& Player ::getCards()
 {
     return this->cards;
 }

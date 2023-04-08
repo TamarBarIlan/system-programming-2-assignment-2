@@ -17,8 +17,8 @@ private:
     int countCardsTaken;
 
 public:
-    Player() {}
-    Player(std ::string name);
+    //Player() {}
+    Player(string name); //std :: string name
     int stacksize();
     int cardesTaken();
 
