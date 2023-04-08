@@ -30,7 +30,7 @@ public:
     void printLog();
     void printStats();
 
-    void tempPlayTurn();
+    void tempPlayTurn(int, int);
     void initialize(Deck &deck);
     void shuffle(Deck& deck);
     bool deal_cards(Deck& deck, vector<Card>& p1_cards, vector<Card>& p2_cards, int num_cards);

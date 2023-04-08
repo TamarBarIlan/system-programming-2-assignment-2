@@ -7,7 +7,7 @@ enum Rank
 {
     ACE = 1,
     TWO,
-    TREE,
+    THREE,
     FOUR,
     FIVE,
     SIX,

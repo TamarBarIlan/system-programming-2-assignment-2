@@ -6,7 +6,7 @@
 #include <vector>
 
 // constructor
-Game ::Game(Player& p1, Player& p2)
+Game ::Game(Player &p1, Player &p2)
     : p1(p1), p2(p2)
 {
     this->p1 = p1;
@@ -14,11 +14,11 @@ Game ::Game(Player& p1, Player& p2)
     this->lastIndex = 0;
     this->isOver = false;
     Deck deck;
-    //Dealing the cards to each player
+    // Dealing the cards to each player
     initialize(deck);
     shuffle(deck);
     deal_cards(deck, p1.getCards(), p2.getCards(), 26);
-    
+
     cout << "p1: " << endl;
     for (int i = 0; i < 26; i++)
     {
@@ -43,13 +43,15 @@ int Game ::playTurn()
     }
     int index = p1.getIndex();
     this->lastIndex = index;
-    tempPlayTurn();
+    tempPlayTurn(index, 0);
     return 0;
 }
 
-void Game ::tempPlayTurn()
+// The function plays one turn
+// If ifPrint == 1 then the function prints the queue
+void Game ::tempPlayTurn(int index, int ifPrint)
 {
-    cout << "start tempPlayTurn" << endl;
+    // cout << "start tempPlayTurn" << endl;
 
     int p1Index = -1;
     int p2Index = -1;
@@ -58,6 +60,7 @@ void Game ::tempPlayTurn()
 
     if (!(p1.isIndexValid(p1Index) && p2.isIndexValid(p2Index)))
     {
+        // cout << "out of tempPlayTurn()" << endl;
         p1.addCardesTaken(26 - this->lastIndex);
         p2.addCardesTaken(26 - this->lastIndex);
         this->isOver = true;
@@ -65,7 +68,15 @@ void Game ::tempPlayTurn()
     // p1 win
     else if (p1.getNumInIndex(p1Index) > p2.getNumInIndex(p2Index))
     {
-        cout << "in the case that p1 win" << endl;
+        if (ifPrint == 1)
+        {
+            cout << "in the case that p1 win" << endl;
+            p1.printCardInIndex(p1Index);
+            cout << " ";
+            p2.printCardInIndex(p2Index);
+            cout << ". " << p1.getName() << " wins." << endl;
+        }
+
         p1.setIndex(p1Index + 1);
         p2.setIndex(p2Index + 1);
         p1.addCardesTaken((p1.getIndex() - this->lastIndex) * 2);
@@ -74,6 +85,13 @@ void Game ::tempPlayTurn()
     else if (p1.getNumInIndex(p1Index) < p2.getNumInIndex(p2Index))
     {
         cout << "in the case that p2 win" << endl;
+        if (ifPrint == 1)
+        {
+            p1.printCardInIndex(p1Index);
+            cout << " ";
+            p2.printCardInIndex(p2Index);
+            cout << ". " << p2.getName() << " wins." << endl;
+        }
         p1.setIndex(p1Index + 1);
         p2.setIndex(p2Index + 1);
         p2.addCardesTaken((p2.getIndex() - this->lastIndex) * 2);
@@ -82,14 +100,23 @@ void Game ::tempPlayTurn()
     else
     {
         cout << "in draw case " << endl;
+        if (ifPrint == 1)
+        {
+            p1.printCardInIndex(p1Index);
+            cout << " ";
+            p2.printCardInIndex(p2Index);
+            cout << ". "
+                 << " draw." << endl;
+        }
+
         p1.setIndex(p1Index + 2);
         p2.setIndex(p2Index + 2);
-        tempPlayTurn();
+        tempPlayTurn(p1.getIndex(), ifPrint);
     }
 }
 void Game ::printLastTurn()
 {
-    
+    tempPlayTurn(lastIndex, 1);
 }
 void Game ::playAll()
 {
@@ -105,7 +132,7 @@ void Game ::printStats()
 }
 
 // Initialize a deck of cards
-void Game :: initialize(Deck &deck)
+void Game ::initialize(Deck &deck)
 {
     Card card;
     for (int j = 0; j < card.num_suits; j++)
@@ -119,21 +146,22 @@ void Game :: initialize(Deck &deck)
     }
 }
 
-void Game::shuffle(Deck& deck) {
+void Game::shuffle(Deck &deck)
+{
     // Use a random number generator to shuffle the deck
     std::random_device rd;
     std::mt19937 gen(rd());
     std::shuffle(deck.cards.begin(), deck.cards.end(), gen);
 }
 
-//Dealing a deck of cards
-bool Game :: deal_cards(Deck& deck, vector<Card>& p1_cards, vector<Card>& p2_cards, int num_cards)
+// Dealing a deck of cards
+bool Game ::deal_cards(Deck &deck, vector<Card> &p1_cards, vector<Card> &p2_cards, int num_cards)
 {
-    if(deck.cards.size() < 2 * num_cards)
+    if (deck.cards.size() < 2 * num_cards)
     {
         return false;
     }
-    for( int i = 0; i < num_cards; i++)
+    for (int i = 0; i < num_cards; i++)
     {
         p1_cards.push_back(deck.cards[0]);
         deck.cards.erase(deck.cards.begin());
@@ -143,15 +171,15 @@ bool Game :: deal_cards(Deck& deck, vector<Card>& p1_cards, vector<Card>& p2_car
     return true;
 }
 
-void Game :: print_deck(const Deck& deck)
+void Game ::print_deck(const Deck &deck)
 {
-    for(Card c : deck.cards)
+    for (Card c : deck.cards)
     {
         print_card(c);
     }
 }
 
-void  Game :: print_card(const Card& card)
+void Game ::print_card(const Card &card)
 {
     cout << "Rank = " << card.rank << ", Suit = " << card.suit << endl;
 }

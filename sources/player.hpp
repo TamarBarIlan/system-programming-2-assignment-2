@@ -17,7 +17,6 @@ private:
     int countCardsTaken;
 
 public:
-    //Player() {}
     Player(string name); //std :: string name
     int stacksize();
     int cardesTaken();
@@ -29,4 +28,6 @@ public:
     void addCardesTaken(int num);
 
     vector<Card>& getCards();
+    string getName();
+    void printCardInIndex(int);
 };
