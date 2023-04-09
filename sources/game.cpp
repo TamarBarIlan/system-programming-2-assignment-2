@@ -11,7 +11,7 @@ Game ::Game(Player &p1, Player &p2)
 {
     this->p1 = p1;
     this->p2 = p2;
-    this->lastIndex = 0;
+    this->lastIndex = -1;
     this->isOver = false;
     Deck deck;
     // Dealing the cards to each player
@@ -42,21 +42,22 @@ int Game ::playTurn()
         return -1;
     }
     int index = p1.getIndex();
+    // cout << "p1.getIndex() = " << p1.getIndex() << endl;
     this->lastIndex = index;
     tempPlayTurn(index, 0);
     return 0;
 }
 
 // The function plays one turn
-// If ifPrint == 1 then the function prints the queue
+// If ifPrint == 1 then the function prints the turn
 void Game ::tempPlayTurn(int index, int ifPrint)
 {
-    // cout << "start tempPlayTurn" << endl;
-
+    // cout << "start tempPlayTurn. ifPrint = " << ifPrint << endl;
+    // cout << "index = " << index << endl;
     int p1Index = -1;
     int p2Index = -1;
-    p1Index = p1.getIndex();
-    p2Index = p2.getIndex();
+    p1Index = index; //p1.getIndex()
+    p2Index = index; //p2.getIndex()
 
     if (!(p1.isIndexValid(p1Index) && p2.isIndexValid(p2Index)))
     {
@@ -70,7 +71,7 @@ void Game ::tempPlayTurn(int index, int ifPrint)
     {
         if (ifPrint == 1)
         {
-            cout << "in the case that p1 win" << endl;
+            //cout << "in the case that p1 win" << endl;
             p1.printCardInIndex(p1Index);
             cout << " ";
             p2.printCardInIndex(p2Index);
@@ -84,7 +85,7 @@ void Game ::tempPlayTurn(int index, int ifPrint)
     // p2 win
     else if (p1.getNumInIndex(p1Index) < p2.getNumInIndex(p2Index))
     {
-        cout << "in the case that p2 win" << endl;
+        //cout << "in the case that p2 win" << endl;
         if (ifPrint == 1)
         {
             p1.printCardInIndex(p1Index);
@@ -99,7 +100,7 @@ void Game ::tempPlayTurn(int index, int ifPrint)
     // draw
     else
     {
-        cout << "in draw case " << endl;
+        //cout << "in draw case " << endl;
         if (ifPrint == 1)
         {
             p1.printCardInIndex(p1Index);
@@ -116,7 +117,19 @@ void Game ::tempPlayTurn(int index, int ifPrint)
 }
 void Game ::printLastTurn()
 {
-    tempPlayTurn(lastIndex, 1);
+    if (lastIndex == -1)
+    {
+        cout << "They haven't played yet";
+    }
+    else
+    {
+        Player p1Temp = p1;
+        Player p2Temp = p2;
+        //cout << "lastIndex = " << lastIndex << endl;
+        tempPlayTurn(lastIndex, 1);
+        p1 = p1Temp;
+        p2 = p2Temp;
+    }
 }
 void Game ::playAll()
 {

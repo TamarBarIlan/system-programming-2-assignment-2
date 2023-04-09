@@ -11,6 +11,7 @@
         "initializer_list": "cpp",
         "functional": "cpp",
         "memory": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "iostream": "cpp"
     }
 }
