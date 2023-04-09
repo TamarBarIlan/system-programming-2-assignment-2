@@ -39,10 +39,13 @@ int Game ::playTurn()
 {
     if (this->isOver || p1.getIndex() != p2.getIndex() || !(p1.isIndexValid(p1.getIndex()) && p2.isIndexValid(p2.getIndex())))
     {
+        this->isOver = true;
         return -1;
     }
+
     int index = p1.getIndex();
-    // cout << "p1.getIndex() = " << p1.getIndex() << endl;
+    //cout << "p1.getIndex() = " << p1.getIndex() << endl;
+    //cout << "in playTurn() isover = " << isOver << endl;
     this->lastIndex = index;
     tempPlayTurn(index, 0);
     return 0;
@@ -54,24 +57,29 @@ void Game ::tempPlayTurn(int index, int ifPrint)
 {
     // cout << "start tempPlayTurn. ifPrint = " << ifPrint << endl;
     // cout << "index = " << index << endl;
+    //cout << "in A isover = " << isOver << endl;
+    //cout << "in tempPlayTurn() the index = " << index << endl;
+
     int p1Index = -1;
     int p2Index = -1;
-    p1Index = index; //p1.getIndex()
-    p2Index = index; //p2.getIndex()
+    p1Index = index;
+    p2Index = index;
 
-    if (!(p1.isIndexValid(p1Index) && p2.isIndexValid(p2Index)))
+
+    if (p1.getIndex() >= p1.getCards().size() || p2.getIndex() >= p2.getCards().size())
     {
-        // cout << "out of tempPlayTurn()" << endl;
         p1.addCardesTaken(26 - this->lastIndex);
         p2.addCardesTaken(26 - this->lastIndex);
         this->isOver = true;
+        return;
     }
     // p1 win
     else if (p1.getNumInIndex(p1Index) > p2.getNumInIndex(p2Index))
     {
         if (ifPrint == 1)
         {
-            //cout << "in the case that p1 win" << endl;
+            //cout << "in the case that p1 win isover = " << isOver << endl;
+            // cout << "in the case that p1 win" << endl;
             p1.printCardInIndex(p1Index);
             cout << " ";
             p2.printCardInIndex(p2Index);
@@ -85,7 +93,8 @@ void Game ::tempPlayTurn(int index, int ifPrint)
     // p2 win
     else if (p1.getNumInIndex(p1Index) < p2.getNumInIndex(p2Index))
     {
-        //cout << "in the case that p2 win" << endl;
+        //cout << "in the case that p2 win isover = " << isOver << endl;
+        // cout << "in the case that p2 win" << endl;
         if (ifPrint == 1)
         {
             p1.printCardInIndex(p1Index);
@@ -100,7 +109,8 @@ void Game ::tempPlayTurn(int index, int ifPrint)
     // draw
     else
     {
-        //cout << "in draw case " << endl;
+        //cout << "in draw case isover = " << isOver << endl;
+        // cout << "in draw case " << endl;
         if (ifPrint == 1)
         {
             p1.printCardInIndex(p1Index);
@@ -125,7 +135,7 @@ void Game ::printLastTurn()
     {
         Player p1Temp = p1;
         Player p2Temp = p2;
-        //cout << "lastIndex = " << lastIndex << endl;
+        // cout << "lastIndex = " << lastIndex << endl;
         tempPlayTurn(lastIndex, 1);
         p1 = p1Temp;
         p2 = p2Temp;
@@ -133,12 +143,55 @@ void Game ::printLastTurn()
 }
 void Game ::playAll()
 {
+    while (!isOver)
+    {
+        //cout << "in playAll() isover = " << isOver << endl;
+        playTurn();
+    }
 }
 void Game ::printWiner()
 {
+    if (isOver)
+    {
+        if (p1.cardesTaken() > p2.cardesTaken())
+        {
+            cout << p1.getName() << " wins" << endl;
+        }
+        else if (p1.cardesTaken() < p2.cardesTaken())
+        {
+            cout << p2.getName() << " wins" << endl;
+        }
+        else
+        {
+            cout << "draw!" << endl;
+        }
+    }
 }
 void Game ::printLog()
 {
+    cout << "in printLog()" << endl;
+    bool flag = false;
+    if(this->isOver)
+    {
+        cout << "the game over" << endl;
+        flag = true;
+        isOver = false;
+    }
+    Player p1Temp = p1;
+    Player p2Temp = p2;
+    int index = 0;
+    while (index != p1.getIndex())
+    {
+        cout << "index = " << index << endl;
+        tempPlayTurn(index, 1);
+        index = p1.getIndex();
+    }
+    p1 = p1Temp;
+    p2 = p2Temp;
+    if(flag)
+    {
+        isOver = true;
+    }
 }
 void Game ::printStats()
 {
