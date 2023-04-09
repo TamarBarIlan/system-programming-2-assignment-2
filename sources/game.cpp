@@ -169,25 +169,23 @@ void Game ::printWiner()
 }
 void Game ::printLog()
 {
-    cout << "in printLog()" << endl;
     bool flag = false;
     if(this->isOver)
     {
-        cout << "the game over" << endl;
         flag = true;
         isOver = false;
     }
-    Player p1Temp = p1;
-    Player p2Temp = p2;
-    int index = 0;
-    while (index != p1.getIndex())
+    
+    int index = p1.getIndex();
+    p1.setIndex(0);
+    p2.setIndex(0);
+    p1.addCardesTaken(-p1.cardesTaken());
+    p2.addCardesTaken(-p2.cardesTaken());
+    while (p1.getIndex() != index )
     {
-        cout << "index = " << index << endl;
-        tempPlayTurn(index, 1);
-        index = p1.getIndex();
+        cout << "turn number " << p1.getIndex() + 1 << " :" << endl; 
+        tempPlayTurn(p1.getIndex(), 1);
     }
-    p1 = p1Temp;
-    p2 = p2Temp;
     if(flag)
     {
         isOver = true;

@@ -28,7 +28,7 @@ int main()
   {
     cout << "befoer turn: " << i << endl;
     game.playTurn();
-    //game.printLastTurn();
+    // game.printLastTurn();
   }
   //game.printLastTurn();             // print the last turn stats. For example:
                                     // Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
