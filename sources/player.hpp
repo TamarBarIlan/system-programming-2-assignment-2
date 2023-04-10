@@ -13,11 +13,13 @@ class Player
 private:
     string name;
     vector<Card> cards;
+    vector<Card> wonCards;
     int index;
     int countCardsTaken;
+    int numberOfWins;
 
 public:
-    Player(string name); //std :: string name
+    Player(string name);
     int stacksize();
     int cardesTaken();
 
@@ -27,7 +29,12 @@ public:
     void setIndex(int newIndex);
     void addCardesTaken(int num);
 
-    vector<Card>& getCards();
+    vector<Card> &getCards();
     string getName();
     void printCardInIndex(int);
+    void addWin();
+    vector<Card>& getWonCards();
+    Card getCardAt(int index);
+    void printWonCards();
+    int getNumberOfWins();
 };

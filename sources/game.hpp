@@ -20,7 +20,10 @@ private:
     Player& p2;
     int lastIndex;
     bool isOver;
-    int index;
+    int amountOfDraw;
+    int amountOfTrun;
+    vector<Card> p1DrawCard;
+    vector<Card> p2DrawCard;
 
 public:
     Game(Player& p1, Player& p2);
@@ -37,5 +40,6 @@ public:
     bool deal_cards(Deck& deck, vector<Card>& p1_cards, vector<Card>& p2_cards, int num_cards);
     void print_deck(const Deck& deck);
     void print_card(const Card& card);
-    bool isIndexValid(int);
+    // bool isIndexValid(int);
+    void addDraw();
 };

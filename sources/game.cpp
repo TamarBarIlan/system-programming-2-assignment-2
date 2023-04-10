@@ -13,8 +13,10 @@ Game ::Game(Player &p1, Player &p2)
     this->p2 = p2;
     this->lastIndex = -1;
     this->isOver = false;
+    this->amountOfDraw = 0;
+    this->amountOfTrun = 0;
     Deck deck;
-    // Dealing the cards to each player
+
     initialize(deck);
     shuffle(deck);
     deal_cards(deck, p1.getCards(), p2.getCards(), 26);
@@ -44,9 +46,8 @@ int Game ::playTurn()
     }
 
     int index = p1.getIndex();
-    //cout << "p1.getIndex() = " << p1.getIndex() << endl;
-    //cout << "in playTurn() isover = " << isOver << endl;
     this->lastIndex = index;
+    this->amountOfTrun++;
     tempPlayTurn(index, 0);
     return 0;
 }
@@ -55,21 +56,24 @@ int Game ::playTurn()
 // If ifPrint == 1 then the function prints the turn
 void Game ::tempPlayTurn(int index, int ifPrint)
 {
-    // cout << "start tempPlayTurn. ifPrint = " << ifPrint << endl;
-    // cout << "index = " << index << endl;
-    //cout << "in A isover = " << isOver << endl;
-    //cout << "in tempPlayTurn() the index = " << index << endl;
 
     int p1Index = -1;
     int p2Index = -1;
     p1Index = index;
     p2Index = index;
 
-
     if (p1.getIndex() >= p1.getCards().size() || p2.getIndex() >= p2.getCards().size())
     {
         p1.addCardesTaken(26 - this->lastIndex);
         p2.addCardesTaken(26 - this->lastIndex);
+        if (!ifPrint)
+        {
+            p1.getWonCards().insert(p1.getWonCards().end(), p1DrawCard.begin(), p1DrawCard.end());
+            p2.getWonCards().insert(p2.getWonCards().end(), p2DrawCard.begin(), p2DrawCard.end());
+            p1DrawCard.clear();
+            p2DrawCard.clear();
+        }
+
         this->isOver = true;
         return;
     }
@@ -78,23 +82,30 @@ void Game ::tempPlayTurn(int index, int ifPrint)
     {
         if (ifPrint == 1)
         {
-            //cout << "in the case that p1 win isover = " << isOver << endl;
-            // cout << "in the case that p1 win" << endl;
             p1.printCardInIndex(p1Index);
             cout << " ";
             p2.printCardInIndex(p2Index);
             cout << ". " << p1.getName() << " wins." << endl;
         }
-
+        else
+        {
+            p1.addWin();
+            p1.getWonCards().insert(p1.getWonCards().end(), p1DrawCard.begin(), p1DrawCard.end());
+            p1DrawCard.clear();
+            p1.getWonCards().insert(p1.getWonCards().end(), p2DrawCard.begin(), p2DrawCard.end());
+            p2DrawCard.clear();
+            p1.getWonCards().push_back(p1.getCardAt(p1Index));
+            p1.getWonCards().push_back(p2.getCardAt(p1Index));
+        }
         p1.setIndex(p1Index + 1);
         p2.setIndex(p2Index + 1);
         p1.addCardesTaken((p1.getIndex() - this->lastIndex) * 2);
+        // cout << " *** p1 won! cards won: ***" << endl;
+        // p1.printWonCards();
     }
     // p2 win
     else if (p1.getNumInIndex(p1Index) < p2.getNumInIndex(p2Index))
     {
-        //cout << "in the case that p2 win isover = " << isOver << endl;
-        // cout << "in the case that p2 win" << endl;
         if (ifPrint == 1)
         {
             p1.printCardInIndex(p1Index);
@@ -102,15 +113,26 @@ void Game ::tempPlayTurn(int index, int ifPrint)
             p2.printCardInIndex(p2Index);
             cout << ". " << p2.getName() << " wins." << endl;
         }
+        else
+        {
+            p2.addWin();
+            p2.getWonCards().insert(p2.getWonCards().end(), p1DrawCard.begin(), p1DrawCard.end());
+            p2.getWonCards().insert(p2.getWonCards().end(), p2DrawCard.begin(), p2DrawCard.end());
+            p1DrawCard.clear();
+            p2DrawCard.clear();
+            p2.getWonCards().push_back(p1.getCardAt(p1Index));
+            p2.getWonCards().push_back(p2.getCardAt(p1Index));
+        }
+
         p1.setIndex(p1Index + 1);
         p2.setIndex(p2Index + 1);
         p2.addCardesTaken((p2.getIndex() - this->lastIndex) * 2);
+        // cout << " *** p2 won! cards won: ***" << endl;
+        // p2.printWonCards();
     }
     // draw
     else
     {
-        //cout << "in draw case isover = " << isOver << endl;
-        // cout << "in draw case " << endl;
         if (ifPrint == 1)
         {
             p1.printCardInIndex(p1Index);
@@ -119,12 +141,27 @@ void Game ::tempPlayTurn(int index, int ifPrint)
             cout << ". "
                  << " draw." << endl;
         }
+        else
+        {
+            addDraw();
+            for (int i = 0; i < 2; i++)
+            {
+                if (p1.isIndexValid(p1Index))
+                {
+                    p1DrawCard.push_back(p1.getCardAt(p1Index + i));
+                    p2DrawCard.push_back(p2.getCardAt(p2Index + i));
+                }
+            }
+        }
+
+        // cout << " *** draw!  ***" << endl;
 
         p1.setIndex(p1Index + 2);
         p2.setIndex(p2Index + 2);
         tempPlayTurn(p1.getIndex(), ifPrint);
     }
 }
+
 void Game ::printLastTurn()
 {
     if (lastIndex == -1)
@@ -135,7 +172,6 @@ void Game ::printLastTurn()
     {
         Player p1Temp = p1;
         Player p2Temp = p2;
-        // cout << "lastIndex = " << lastIndex << endl;
         tempPlayTurn(lastIndex, 1);
         p1 = p1Temp;
         p2 = p2Temp;
@@ -145,7 +181,6 @@ void Game ::playAll()
 {
     while (!isOver)
     {
-        //cout << "in playAll() isover = " << isOver << endl;
         playTurn();
     }
 }
@@ -170,29 +205,42 @@ void Game ::printWiner()
 void Game ::printLog()
 {
     bool flag = false;
-    if(this->isOver)
+    if (this->isOver)
     {
         flag = true;
         isOver = false;
     }
-    
+    int count = 0;
     int index = p1.getIndex();
     p1.setIndex(0);
     p2.setIndex(0);
     p1.addCardesTaken(-p1.cardesTaken());
     p2.addCardesTaken(-p2.cardesTaken());
-    while (p1.getIndex() != index )
+    while (p1.getIndex() != index)
     {
-        cout << "turn number " << p1.getIndex() + 1 << " :" << endl; 
+        count++;
+        cout << "turn number " << count << " :" << endl;
         tempPlayTurn(p1.getIndex(), 1);
     }
-    if(flag)
+    if (flag)
     {
         isOver = true;
     }
 }
 void Game ::printStats()
 {
+    cout << p1.getName() << " won " << p1.getWonCards().size() << " cards" << endl;
+    cout << p1.getName() << " won " << static_cast<unsigned long>(p1.getNumberOfWins()) * 100 / static_cast<unsigned long>(this->amountOfTrun) << "% of the turns" << endl;
+    cout << "The cards won by " << p1.getName() << " are: " << endl;
+    p1.printWonCards();
+    cout << endl;
+    cout << p2.getName() << " won " << p2.getWonCards().size() << " cards" << endl;
+    cout << p2.getName() << " won " << static_cast<unsigned long>(p2.getNumberOfWins()) * 100 / static_cast<unsigned long>(this->amountOfTrun) << "% of the turns" << endl;
+    cout << "The cards won by " << p2.getName() << " are: " << endl;
+    p2.printWonCards();
+    cout << endl;
+    cout << "Number of turs = " << this->amountOfTrun << endl;
+    cout << "Amount of draws that happand = " << this->amountOfDraw << endl;
 }
 
 // Initialize a deck of cards
@@ -235,15 +283,7 @@ bool Game ::deal_cards(Deck &deck, vector<Card> &p1_cards, vector<Card> &p2_card
     return true;
 }
 
-void Game ::print_deck(const Deck &deck)
+void Game ::addDraw()
 {
-    for (Card c : deck.cards)
-    {
-        print_card(c);
-    }
-}
-
-void Game ::print_card(const Card &card)
-{
-    cout << "Rank = " << card.rank << ", Suit = " << card.suit << endl;
+    this->amountOfDraw++;
 }
